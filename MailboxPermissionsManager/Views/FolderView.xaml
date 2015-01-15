@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="MailboxPermissionsManager.Views.FolderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
+    
+    <DockPanel>
+        
+        <TextBlock DockPanel.Dock="Top" Text="Folder Permissions" FontSize="14" FontWeight="Bold" TextDecorations="Underline"/>
+        
+        <Label Content="Users:" DockPanel.Dock="Top"/>
+        
+        <DockPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" FlowDirection="RightToLeft" Margin="0">
+                <Button x:Name="singleSubfolders" Content="Folder &amp; SubFolders" Command="{Binding SingleUserSubfoldersCommand}" CommandParameter="{Binding ElementName=singleSubfolders, Path=Name}" TabIndex="4"/>
+                <Button x:Name="singleFolder" Content="Folder Only" Command="{Binding SingleUserFolderOnlyCommand}" CommandParameter="{Binding ElementName=singleFolder, Path=Name}" TabIndex="3"/>
+                <Label Content=":Apply to" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <ComboBox MinWidth="100" DockPanel.Dock="Right" ItemsSource="{Binding PermissionLevels}" SelectedItem="{Binding PermissionToApply}" TabIndex="2"/>
+            <ComboBox ItemsSource="{Binding Path=ParentMailboxViewModel.MailboxesAndGroupsView}" SelectedItem="{Binding MailboxToGrantPermissionsTo}" TabIndex="1"/>
+        </DockPanel>
+        
+        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" DockPanel.Dock="Bottom" Margin="0">
+            <Button x:Name="multiSubfolders" Content="Folder &amp; SubFolders" Command="{Binding MultiUserSubfoldersCommand}" CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
+            <Button x:Name="multiFolder" Content="Folder Only" Command="{Binding MultiUserFolderOnlyCommand}" CommandParameter="{Binding Path=Name, RelativeSource={RelativeSource Self}}"/>
+            <Label Content=":Apply to" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <ListView ItemsSource="{Binding PermissionsViewModels}" DockPanel.Dock="Bottom" HorizontalContentAlignment="Stretch"
+                  Focusable="False">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel LastChildFill="True">
+                        <ComboBox DockPanel.Dock="Right" SelectedItem="{Binding AccessRights}" ItemsSource="{Binding PermissionLevels}" MinWidth="130" VerticalContentAlignment="Center"/>
+                        <Label DockPanel.Dock="Right" Content="{Binding OriginalAccessRights, Mode=OneWay}" MinWidth="100"/>
+                        <Label DockPanel.Dock="Left" Content="{Binding Permission.User, Mode=OneWay}" MinWidth="100"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+    </DockPanel>
+</UserControl>

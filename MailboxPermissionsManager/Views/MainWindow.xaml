@@ -1,0 +1,51 @@
+﻿<Window x:Class="MailboxPermissionsManager.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:MailboxPermissionsManager.Views"
+        Title="Mailbox Permissions Manager" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing" Height="800" Width="1200" Icon="/Resources/Permissions-Reset-Icon.png">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" MinWidth="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition MinWidth="500"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel>
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem Content="{Binding Status}" MinHeight="22"/>
+            </StatusBar>
+            <Button Content="Refresh" DockPanel.Dock="Bottom" Command="{Binding RefreshMailboxesCommand}"/>
+            <Button Content="Select" DockPanel.Dock="Bottom" Command="{Binding SelectMailboxCommand}"/>
+            <ListView ItemsSource="{Binding UserMailboxesView}" DockPanel.Dock="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      IsSynchronizedWithCurrentItem="True" SelectionMode="Single"/>
+        </DockPanel>
+
+        <TabControl Grid.Column="2" ItemsSource="{Binding MailboxViewModels}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0">
+                        <Label Content="{Binding Mailbox.Name}" Margin="0" Padding="0"/>
+                        <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CloseCommand}"
+                                CommandParameter="{Binding}"
+                                Style="{DynamicResource CloseTabButton}" Padding="0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <views:MailboxView/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch" Width="4"/>
+    </Grid>
+</Window>
